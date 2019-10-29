@@ -1,0 +1,30 @@
+{
+  "name": "ly.push",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build-pushly": "npx webpack --config pushly.webpack.config.js",
+    "build-worker": "npx webpack --config listener-sw.webpack.config.js",
+    "build": "npx webpack --config pushly.webpack.config.js & npx webpack --config listener-sw.webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/500apps2/push.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/500apps2/push/issues"
+  },
+  "homepage": "https://github.com/500apps2/push#readme",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "firebase": "^6.6.2"
+  }
+}
