@@ -113,7 +113,6 @@ export default class ClientInfo {
     visitor_info.majorVersion = visitor_info.version;
     visitor_info.OS = this.searchString(this.dataOS) || "An unknown OS";
     visitor_info.device_type = this.getPlatformType();
-    console.log(visitor_info);
     return visitor_info
   }
 
@@ -201,17 +200,16 @@ export default class ClientInfo {
    * @param {callback} failure 
    */
   detectFirebase(success, failure) {
-    if (!((window.location.protocol == 'https:') || (window.location.href == 'http://localhost:3333/'))) {
+    if (!(window.location.protocol == 'https:')) {
       return failure();
     }
-    var url = window.location.origin + window.location.pathname + 'firebase-messaging-sw.js'
+    var url = (window.location.origin == 'https://pushly.500apps.com') ? window.location.origin + '/pushly/firebase-messaging-sw.js' : window.location.origin + '/firebase-messaging-sw.js'
     var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");// code for IE6, IE5
     request.open('GET', url, false);
     request.send(); // there will be a 'pause' here until the response to come.
     // the object request will be actually modified
 
     if (request.status === 200) {
-      debugger;
       return success();
     }
     return failure();

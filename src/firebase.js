@@ -1,5 +1,6 @@
 const Firebase = require('firebase/app');
 require('firebase/messaging');
+import PushlyServerFirebase from './pushly-server-firebase.js';
 
 /**
  * @class PushlyFirebase
@@ -10,15 +11,17 @@ export default class PushlyFirebase {
      * @constructor
      */
     constructor() {
-            Firebase.initializeApp({
-                apiKey: "AIzaSyCHOfzwaG8QdWZQPbsD38gZQDbNmWyk3oA",
-                authDomain: "apptitans.firebaseapp.com",
-                databaseURL: "https://apptitans.firebaseio.com",
-                projectId: "apptitans",
-                storageBucket: "",
-                messagingSenderId: "721913454836",
-                appId: "1:721913454836:web:68de7e40f92c5197"
-            });
+
+        //Initialize app in fcm
+        Firebase.initializeApp({
+            apiKey: "AIzaSyCHOfzwaG8QdWZQPbsD38gZQDbNmWyk3oA",
+            authDomain: "apptitans.firebaseapp.com",
+            databaseURL: "https://apptitans.firebaseio.com",
+            projectId: "apptitans",
+            storageBucket: "",
+            messagingSenderId: "721913454836",
+            appId: "1:721913454836:web:68de7e40f92c5197"
+        });
     }
 
     /**
@@ -27,7 +30,17 @@ export default class PushlyFirebase {
     init() {
         debugger;
         let scope = PushlyFirebase;
-        PushlyFirebase.getClientSideApproval();
+        let serviceworkerRegistrationPath = (window.location.origin == 'https://pushly.500apps.com') ? '/pushly/firebase-messaging-sw.js' : '/firebase-messaging-sw.js';
+
+        //Register service worker path in fcm
+        navigator.serviceWorker.register(serviceworkerRegistrationPath)
+            .then((registration) => {
+                Firebase.messaging().useServiceWorker(registration);
+            });
+
+        // Request permission to get token.....
+        scope.getClientSideApproval();
+
         //To get refresh token
         Firebase.messaging().onTokenRefresh(() => {
             window._pushmessaging.getToken().then((refreshedToken) => {
@@ -57,14 +70,15 @@ export default class PushlyFirebase {
         // [START get_token]
         debugger;
         Firebase.messaging().getToken().then((currentToken) => {
-            if (currentToken) {
-                scope.sendTokenToServer(currentToken);
-            } else {
+            if (!currentToken) {
                 // Show permission request.
                 console.log('No Instance ID token available. Request permission to generate one.');
-                // Show permission UI.
+                // Set token flag to false.
                 scope.setTokenSentToServer(false);
+                //Request permission
+                PushlyFirebase.getClientSideApproval();
             }
+            return scope.sendTokenToServer(currentToken);
         }).catch((err) => {
             console.log('An error occurred while retrieving token. ', err);
             scope.setTokenSentToServer(false);
@@ -85,6 +99,11 @@ export default class PushlyFirebase {
             })
             .catch(function (err) {
                 console.log('error occured......', err);
-            })
+
+                //Close child window if open
+                if (window.location.origin == 'https://pushly.500apps.com') {
+                    PushlyServerFirebase.closeChildWindow("close");
+                }
+            });
     }
-}
+} 

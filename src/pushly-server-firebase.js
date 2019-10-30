@@ -1,12 +1,25 @@
+
+/**
+ * @class PushlyServerFirebase
+ */
 export default class PushlyServerFirebase {
+    /**
+     * @constructor
+     */
     constructor() {
 
     }
+
+    /**
+     * Initialization method
+     * @param {Object} scope 
+     */
     init(scope = PushlyServerFirebase) {
         if (!((window.localStorage.getItem('_scb')) && (window.sessionStorage.getItem('_scb')))) {
             scope.getPushlySideApproval();
         }
     }
+
     /**
      * To show popup to get pushly side approval from the user when service worker file is not present in user domain
      */
@@ -36,12 +49,17 @@ export default class PushlyServerFirebase {
     }
 
     /**
-     * To check whether user grants permission
+     * To return permission status
      * @param {Boolean} status true or false
      */
     static isPushPermissionGranted(status) {
         return PushlyServerFirebase.checkPermissionStatus(status)
     }
+
+    /**
+     * To check permission status
+     * @param {Boolean} status 
+     */
     static checkPermissionStatus(status) {
         if (status) {
             window.localStorage.setItem('_scb', 1);
@@ -49,9 +67,27 @@ export default class PushlyServerFirebase {
         }
         return PushlyServerFirebase.setDenySession();
     }
+
+    /**
+     * Open child window to include sw file
+     */
     static openChildWindow() {
-        var childWindow = window.open("http://localhost:3008", "Ratting", "width=550,height=500,left=150,top=200,toolbar=0,status=0,")
+        window._pushchildWindow = window.open("https://pushly.500apps.com/pushly/sw/" + window._push.websiteId, "Ratting", "width=550,height=500,left=150,top=200,toolbar=0,status=0,")
     }
+
+    /**
+     * Close child window
+     * @param {String} message 
+     */
+    static closeChildWindow(message) {
+        if (message == 'close') {
+            window.close();
+        }
+    }
+
+    /**
+     * To set session storage when user deny permission
+     */
     static setDenySession() {
         window.sessionStorage.setItem('_scb', 1);
     }

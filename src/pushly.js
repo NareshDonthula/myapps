@@ -33,7 +33,6 @@ class Pushly {
         var pushlyFirebase = new PushlyFirebase();
         var pushlyServerFirebase = new PushlyServerFirebase();
         this.clientInfo.detectFirebase(pushlyFirebase.init, pushlyServerFirebase.init)
-        //clientInfo.detectFirebase();
     }
 
     /**
@@ -107,7 +106,7 @@ class Pushly {
             "operating_system": this.visitor_info.OS,
             "device_type": this.visitor_info.deviceType,
             "ipAddress": window._push.ip,
-            "subscptn": token
+            "subscription": token
         }
         fetch('https://pushly.500apps.com/pushly/get/browserdata', {
             method: "post",
@@ -120,8 +119,11 @@ class Pushly {
             .catch(error => {
                 console.log('Error:', error);
             });
+        // Close child window if open    
+        if (window.location.origin == 'https://pushly.500apps.com') {
+            PushlyServerFirebase.closeChildWindow("close");
+        }
     }
-
 }
 (() => { window._Pushly = new Pushly() })();
 

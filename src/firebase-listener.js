@@ -34,12 +34,12 @@ class PushlyFirebaseListener {
       var message = JSON.parse(event.data.text());
       console.log('message object: ' + message);
       //if(message.data.url) url = message.data.url;
-      flow_id = message.data.flow_id;
-      message_id = message.data.message_id;
-      domain_id = message.data.domain_id;
-      website_id = message.data.website_id;
-      subscription_object = message.data.subscription_object;
-      launch_url = message.data.launch_url;
+      this.flow_id = message.data.flow_id;
+      this.message_id = message.data.message_id;
+      this.domain_id = message.data.domain_id;
+      this.website_id = message.data.website_id;
+      this.subscription_object = message.data.subscription_object;
+      this.launch_url = message.data.launch_url;
 
       var obj = JSON.parse(message.data.notification);
       console.log('object: ' + obj);
@@ -94,13 +94,13 @@ class PushlyFirebaseListener {
 
   static saveUserAction = function (action_text) {
     const messagelog = {
-      url: url,
-      excutionText: action_text,
-      messageId: message_id,
-      flowId: flow_id,
-      domainId: domain_id,
-      websiteId: website_id,
-      subscriptionObject: subscription_object
+      url: this.url,
+      excutionText: this.action_text,
+      messageId: this.message_id,
+      flowId: this.flow_id,
+      domainId: this.domain_id,
+      websiteId: this.website_id,
+      subscriptionObject: this.subscription_object
     }
     fetch("https://pushly.500apps.com/pushly/messagelog", {
       method: "post",
