@@ -10,11 +10,8 @@ class PushlyFirebaseListener {
    * @constructor
    */
   constructor() {
-    this.flow_id = 0;
-    this.message_id = 0;
-    this.exe_msg_id = 0;
-    this.domain_id = 0;
-    this.website_id = 0;
+    this.exe_message_api = '';
+    this.message_api = '';
     this.subscription_object = {};
     this.url = '';
     this.launch_url = '';
@@ -34,10 +31,7 @@ class PushlyFirebaseListener {
       var message = JSON.parse(event.data.text());
       console.log('message object: ' + message);
       //if(message.data.url) url = message.data.url;
-      this.flow_id = message.data.flow_id;
-      this.message_id = message.data.message_id;
-      this.domain_id = message.data.domain_id;
-      this.website_id = message.data.website_id;
+      this.message_api = message.data.message_api;
       this.subscription_object = message.data.subscription_object;
       this.launch_url = message.data.launch_url;
 
@@ -62,7 +56,7 @@ class PushlyFirebaseListener {
     self.addEventListener('notificationclose', (event) => {
       const clickedNotification = event.notification;
       console.log('on event click' + event.notification);
-      if (message_id != exe_msg_id) {
+      if (this.message_api != this.exe_message_api) {
         saveUserAction("close");
       }
     });
@@ -80,7 +74,7 @@ class PushlyFirebaseListener {
         clients.openWindow(launch_url)
       }
 
-      exe_msg_id = message_id;
+      this.exe_message_api = this.message_api;
       const clickedNotification = event.notification;
       console.log('on event click' + event.notification);
       PushlyFirebaseListener.saveUserAction("executed");
@@ -95,11 +89,8 @@ class PushlyFirebaseListener {
   static saveUserAction = function (action_text) {
     const messagelog = {
       url: this.url,
-      excutionText: this.action_text,
-      messageId: this.message_id,
-      flowId: this.flow_id,
-      domainId: this.domain_id,
-      websiteId: this.website_id,
+      excutionText: action_text,
+      message_api: this.message_api,
       subscriptionObject: this.subscription_object
     }
     fetch("https://pushly.500apps.com/pushly/messagelog", {

@@ -8,7 +8,6 @@ export default class ClientInfo {
    * @constructor
    */
   constructor() {
-    this._pushly_website_id = window._push.websiteId;
     this.dataBrowser = [{
       string: navigator.userAgent,
       subString: "Chrome",
@@ -178,20 +177,6 @@ export default class ClientInfo {
     } else {
       return device_type = 'Desktop';
     }
-  }
-
-  /**
-  * To get the ip address of the user
-  */
-  getIpAddress() {
-    fetch('https://jsonip.com', { method: 'GET' })
-      .then(response => response.json())
-      .then(function (response) {
-        window._push.ip = response.ip;
-      })
-      .catch(error => {
-        console.log('Error:', error);
-      });
   }
 
   /**

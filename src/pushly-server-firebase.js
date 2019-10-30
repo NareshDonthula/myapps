@@ -72,7 +72,7 @@ export default class PushlyServerFirebase {
      * Open child window to include sw file
      */
     static openChildWindow() {
-        window._pushchildWindow = window.open("https://pushly.500apps.com/pushly/sw/" + window._push.websiteId, "Ratting", "width=550,height=500,left=150,top=200,toolbar=0,status=0,")
+        window._pushchildWindow = window.open("https://pushly.500apps.com/pushly/sw/" + window._push.apiKey, "Ratting", "width=550,height=500,left=150,top=200,toolbar=0,status=0,")
     }
 
     /**

@@ -26,31 +26,10 @@ class Pushly {
         this.clientInfo = new ClientInfo();
         this.visitor_info = this.clientInfo.getVistorInfo();
 
-        // Get website info
-        this.getWebsiteDetails();
-
         //Initialize firebase
         var pushlyFirebase = new PushlyFirebase();
         var pushlyServerFirebase = new PushlyServerFirebase();
         this.clientInfo.detectFirebase(pushlyFirebase.init, pushlyServerFirebase.init)
-    }
-
-    /**
-  * To get the user domain details
-  * @param {Object} scope Current instance
-  */
-    getWebsiteDetails(scope = this) {
-        fetch(`https://pushly.500apps.com/pushly/get/website?where=id=${window._push.websiteId}`, { method: 'GET' })
-            .then(response => response.json())
-            .then(function (response) {
-                scope.websiteDetails.domain_id = response[0].domain_id;
-                scope.websiteDetails.created_by = response[0].created_by;
-                scope.websiteDetails.website_id = response[0].website_id;
-                scope.websiteDetails.welcome_message = JSON.parse(response[0].welcome_message);
-            })
-            .catch(error => {
-                console.log('Error:', error);
-            });
     }
 
 
@@ -72,7 +51,6 @@ class Pushly {
             console.log('Sending token to server...');
             // TODO(developer): Send the current token to your server.
             this.setTokenSentToServer(true);
-            this.clientInfo.getIpAddress();
             this.storeToken(currentToken);
         } else {
             console.log('Token already sent to server so won\'t send it again ' +
@@ -95,9 +73,7 @@ class Pushly {
      */
     storeToken(token) {
         let details = {
-            "domain_id": this.websiteDetails.domain_id,
-            "created_by": this.websiteDetails.created_by,
-            "website_id": this.websiteDetails.website_id,
+            "api_key": window._push.apiKey,
             "nVersion": this.visitor_info.nVersion,
             "nAgent": this.visitor_info.nAgent,
             "browserName": this.visitor_info.browser,
@@ -105,7 +81,6 @@ class Pushly {
             "majorVersion": this.visitor_info.majorVersion,
             "operating_system": this.visitor_info.OS,
             "device_type": this.visitor_info.deviceType,
-            "ipAddress": window._push.ip,
             "subscription": token
         }
         fetch('https://pushly.500apps.com/pushly/get/browserdata', {
@@ -115,14 +90,19 @@ class Pushly {
             },
             body: JSON.stringify(details)
         })
-            // .then(response => response.json())
+            .then((response) => {
+                // Close child window if open    
+                if (window.location.origin == 'https://pushly.500apps.com') {
+                    PushlyServerFirebase.closeChildWindow("close");
+                }
+            })
             .catch(error => {
                 console.log('Error:', error);
+                // Close child window if open    
+                if (window.location.origin == 'https://pushly.500apps.com') {
+                    PushlyServerFirebase.closeChildWindow("close");
+                }
             });
-        // Close child window if open    
-        if (window.location.origin == 'https://pushly.500apps.com') {
-            PushlyServerFirebase.closeChildWindow("close");
-        }
     }
 }
 (() => { window._Pushly = new Pushly() })();
