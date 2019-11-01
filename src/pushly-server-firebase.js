@@ -62,7 +62,6 @@ export default class PushlyServerFirebase {
      */
     static checkPermissionStatus(status) {
         if (status) {
-            window.localStorage.setItem('_scb', 1);
             return PushlyServerFirebase.openChildWindow();
         }
         return PushlyServerFirebase.setDenySession();
@@ -72,6 +71,7 @@ export default class PushlyServerFirebase {
      * Open child window to include sw file
      */
     static openChildWindow() {
+        window.localStorage.setItem('_scb', 1);
         window._pushchildWindow = window.open("https://pushly.500apps.com/pushly/sw/" + window._push.apiKey, "Ratting", "width=550,height=500,left=150,top=200,toolbar=0,status=0,")
     }
 

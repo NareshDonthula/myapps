@@ -70,15 +70,15 @@ export default class PushlyFirebase {
         // [START get_token]
         debugger;
         Firebase.messaging().getToken().then((currentToken) => {
-            if (!currentToken) {
-                // Show permission request.
-                console.log('No Instance ID token available. Request permission to generate one.');
-                // Set token flag to false.
-                scope.setTokenSentToServer(false);
-                //Request permission
-                return PushlyFirebase.getClientSideApproval();
+            if (currentToken) {
+                return scope.sendTokenToServer(currentToken);
             }
-            return scope.sendTokenToServer(currentToken);
+            // Show permission request.
+            console.log('No Instance ID token available. Request permission to generate one.');
+            // Set token flag to false.
+            scope.setTokenSentToServer(false);
+            //Request permission
+            return PushlyFirebase.getClientSideApproval();
         }).catch((err) => {
             console.log('An error occurred while retrieving token. ', err);
             scope.setTokenSentToServer(false);
