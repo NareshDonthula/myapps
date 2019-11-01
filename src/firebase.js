@@ -76,7 +76,7 @@ export default class PushlyFirebase {
                 // Set token flag to false.
                 scope.setTokenSentToServer(false);
                 //Request permission
-                PushlyFirebase.getClientSideApproval();
+                return PushlyFirebase.getClientSideApproval();
             }
             return scope.sendTokenToServer(currentToken);
         }).catch((err) => {
