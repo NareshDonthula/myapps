@@ -15,7 +15,7 @@ export default class PushlyServerFirebase {
      * @param {Object} scope 
      */
     init(scope = PushlyServerFirebase) {
-        if (!((window.localStorage.getItem('_scb')) && (window.sessionStorage.getItem('_scb')))) {
+        if (!((window.localStorage.getItem('_scb')) || (window.sessionStorage.getItem('_scb')))) {
             scope.getPushlySideApproval();
         }
     }

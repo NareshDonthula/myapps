@@ -100,19 +100,19 @@ export default class ClientInfo {
      * Get visitor information
      */
   getVistorInfo() {
-    var visitor_info = {};
-    visitor_info.browser = this.searchString(this.dataBrowser)
+    var visitorInfo = {};
+    visitorInfo.browser = this.searchString(this.dataBrowser)
       || "An unknown browser";
-    visitor_info.version = this.searchVersion(navigator.userAgent)
+    visitorInfo.version = this.searchVersion(navigator.userAgent)
       || this.searchVersion(navigator.appVersion)
       || this.searchMobileVersion(navigator.userAgent)
       || "An unknown version";
-    visitor_info.nVersion = navigator.appVersion;
-    visitor_info.nAgent = navigator.userAgent;
-    visitor_info.majorVersion = visitor_info.version;
-    visitor_info.OS = this.searchString(this.dataOS) || "An unknown OS";
-    visitor_info.device_type = this.getPlatformType();
-    return visitor_info
+    visitorInfo.nVersion = navigator.appVersion;
+    visitorInfo.nAgent = navigator.userAgent;
+    visitorInfo.majorVersion = visitorInfo.version;
+    visitorInfo.OS = this.searchString(this.dataOS) || "An unknown OS";
+    visitorInfo.deviceType = this.getPlatformType();
+    return visitorInfo
   }
 
   /**
@@ -169,13 +169,13 @@ export default class ClientInfo {
    * To get the user device type
    */
   getPlatformType() {
-    let device_type = '';
+    let deviceType = '';
     if (navigator.userAgent.match(/mobile/i)) {
-      return device_type = 'Mobile';
+      return deviceType = 'Mobile';
     } else if (navigator.userAgent.match(/iPad|Android|Touch/i)) {
-      return device_type = 'Tablet';
+      return deviceType = 'Tablet';
     } else {
-      return device_type = 'Desktop';
+      return deviceType = 'Desktop';
     }
   }
 

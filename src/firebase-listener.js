@@ -10,33 +10,26 @@ class PushlyFirebaseListener {
    * @constructor
    */
   constructor() {
-    this.exe_message_api = '';
-    this.message_api = '';
-    this.subscription_object = {};
+    this.exeMessageApi = '';
+    this.messageApi = '';
+    this.subscriptionObject = {};
     this.url = '';
-    this.launch_url = '';
+    this.launchUrl = '';
   }
 
   /**
    * Initialization method
    */
   init() {
-    /**
- * To listen the messages pushed from service worker
- */
 
+    // To listen the messages pushed from service worker
     self.addEventListener('push', function (event) {
-      console.log('[Service Worker] Push Received.');
-      console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
-      var message = JSON.parse(event.data.text());
-      console.log('message object: ' + message);
-      //if(message.data.url) url = message.data.url;
-      this.message_api = message.data.message_api;
-      this.subscription_object = message.data.subscription_object;
-      this.launch_url = message.data.launch_url;
+      var message = event.data.json();
+      this.messageApi = message.data.message_api;
+      this.subscriptionObject = message.data.subscription_object;
+      this.launchUrl = message.data.launch_url;
 
       var obj = JSON.parse(message.data.notification);
-      console.log('object: ' + obj);
       const title = obj.title;
       const options = {
         body: obj.body,
@@ -49,55 +42,45 @@ class PushlyFirebaseListener {
       event.waitUntil(self.registration.showNotification(title, options));
     });
 
-    /**
-     * To listen when user clicks on notification
-     */
-
+    // To listen when user clicks on notification
     self.addEventListener('notificationclose', (event) => {
       const clickedNotification = event.notification;
-      console.log('on event click' + event.notification);
-      if (this.message_api != this.exe_message_api) {
+      if (this.messageApi != this.exeMessageApi) {
         saveUserAction("close");
       }
     });
 
-    /**
-     * To listen when user closes notification
-     */
-
+    // To listen when user closes notification
     self.addEventListener('notificationclick', function (event) {
       if (event.action) {
-        url = event.action;
-        clients.openWindow(event.action)
+        PushlyFirebaseListener.url = event.action;
+        //clients.openWindow(event.action)
       } else {
-        url = launch_url;
-        clients.openWindow(launch_url)
+        PushlyFirebaseListener.url = PushlyFirebaseListener.launchUrl;
+        //clients.openWindow(launch_url)
       }
 
-      this.exe_message_api = this.message_api;
+      this.exeMessageApi = this.messageApi;
       const clickedNotification = event.notification;
-      console.log('on event click' + event.notification);
-      PushlyFirebaseListener.saveUserAction("executed");
+      PushlyFirebaseListener.saveUserAction((event.action) ? event.action : "executed");
 
     });
   }
 
   /**
- * To make a network call and store messages in database
- */
-
+   * To make a network call and store messages in database
+   */
   static saveUserAction = function (action_text) {
     const messagelog = {
       url: this.url,
       excutionText: action_text,
-      message_api: this.message_api,
-      subscriptionObject: this.subscription_object
+      message_api: this.messageApi,
+      subscriptionObject: this.subscriptionObject
     }
     fetch("https://pushly.500apps.com/pushly/messagelog", {
       method: "post",
       headers: {
         Accept: "application/json",
-        //content-type: "application/json"
       },
       body: JSON.stringify(messagelog),
     })

@@ -11,10 +11,9 @@ class Pushly {
      * @constructor
      */
     constructor() {
-        this.visitor_info = {};
+        this.visitorInfo = {};
         this.websiteDetails = {};
         this.clientInfo = {};
-        this.init();
     }
 
     /**
@@ -24,7 +23,7 @@ class Pushly {
 
         // Get client info
         this.clientInfo = new ClientInfo();
-        this.visitor_info = this.clientInfo.getVistorInfo();
+        this.visitorInfo = this.clientInfo.getVistorInfo();
 
         //Initialize firebase
         var pushlyFirebase = new PushlyFirebase();
@@ -74,16 +73,16 @@ class Pushly {
     storeToken(token) {
         let details = {
             "api_key": window._push.apiKey,
-            "nVersion": this.visitor_info.nVersion,
-            "nAgent": this.visitor_info.nAgent,
-            "browserName": this.visitor_info.browser,
-            "browser_version": this.visitor_info.version,
-            "majorVersion": this.visitor_info.majorVersion,
-            "operating_system": this.visitor_info.OS,
-            "device_type": this.visitor_info.deviceType,
+            "nVersion": this.visitorInfo.nVersion,
+            "nAgent": this.visitorInfo.nAgent,
+            "browserName": this.visitorInfo.browser,
+            "browser_version": this.visitorInfo.version,
+            "majorVersion": this.visitorInfo.majorVersion,
+            "operating_system": this.visitorInfo.OS,
+            "device_type": this.visitorInfo.deviceType,
             "subscription": token
         }
-        fetch('https://pushly.500apps.com/pushly/get/browserdata', {
+        fetch('https://pushly.500apps.com/pushly/browser', {
             method: "post",
             headers: {
                 Accept: "application/json",
@@ -105,5 +104,7 @@ class Pushly {
             });
     }
 }
-(() => { window._Pushly = new Pushly() })();
+(() => { window._Pushly = new Pushly() 
+         window._Pushly.init();
+})();
 

@@ -27,8 +27,7 @@ export default class PushlyFirebase {
     /**
      * Initialization method
      */
-    init() {
-        debugger;
+    init() {    
         let scope = PushlyFirebase;
         let serviceworkerRegistrationPath = (window.location.origin == 'https://pushly.500apps.com') ? '/pushly/firebase-messaging-sw.js' : '/firebase-messaging-sw.js';
 
@@ -66,9 +65,7 @@ export default class PushlyFirebase {
    * @param {Object} scope Current instance
    */
     static getFirebaseToken(scope = window._Pushly) {
-
         // [START get_token]
-        debugger;
         Firebase.messaging().getToken().then((currentToken) => {
             if (currentToken) {
                 return scope.sendTokenToServer(currentToken);
