@@ -97,8 +97,8 @@ export default class ClientInfo {
   }
 
   /**
-     * Get visitor information
-     */
+    * Get visitor information
+    */
   getVistorInfo() {
     var visitorInfo = {};
     visitorInfo.browser = this.searchString(this.dataBrowser)

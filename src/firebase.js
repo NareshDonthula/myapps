@@ -11,9 +11,7 @@ export default class PushlyFirebase {
      * @constructor
      */
     constructor() {
-
-        //Initialize app in fcm
-        Firebase.initializeApp({
+        this.firebaseDetails = (window._pushfcm.apiKey == '' || window._pushfcm.authDomain == '' || window._pushfcm.databaseURL == '' || window._pushfcm.projectId == '' || window._pushfcm.messagingSenderId == '' || window._pushfcm.appId == '') ? {
             apiKey: "AIzaSyCHOfzwaG8QdWZQPbsD38gZQDbNmWyk3oA",
             authDomain: "apptitans.firebaseapp.com",
             databaseURL: "https://apptitans.firebaseio.com",
@@ -21,13 +19,16 @@ export default class PushlyFirebase {
             storageBucket: "",
             messagingSenderId: "721913454836",
             appId: "1:721913454836:web:68de7e40f92c5197"
-        });
+        } : window._pushfcm;
+
+        //Initialize app in fcm
+        Firebase.initializeApp(this.firebaseDetails);
     }
 
     /**
      * Initialization method
      */
-    init() {    
+    init() {
         let scope = PushlyFirebase;
         let serviceworkerRegistrationPath = (window.location.origin == 'https://pushly.500apps.com') ? '/pushly/firebase-messaging-sw.js' : '/firebase-messaging-sw.js';
 
