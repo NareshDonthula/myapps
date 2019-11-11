@@ -10,10 +10,15 @@ class PushlyFirebaseListener {
    * @constructor
    */
   constructor() {
+    // Store id of current executed message
     this.exeMessageApi = '';
+    // Store jwt token which has domainId, flowId, messageId 
     this.messageApi = '';
+    // Fcm subscription object
     this.subscriptionObject = {};
+    // Store event action url 
     this.url = '';
+    // Store current domain url 
     this.launchUrl = '';
   }
 
@@ -54,6 +59,7 @@ class PushlyFirebaseListener {
     self.addEventListener('notificationclick', function (event) {
       if (event.action) {
         PushlyFirebaseListener.url = event.action;
+        //TODO : Need to implement url actions
         //clients.openWindow(event.action)
       } else {
         PushlyFirebaseListener.url = PushlyFirebaseListener.launchUrl;
@@ -70,10 +76,10 @@ class PushlyFirebaseListener {
   /**
    * To make a network call and store messages in database
    */
-  static saveUserAction = function (action_text) {
+  static saveUserAction = function (actionText) {
     const messagelog = {
       url: this.url,
-      excutionText: action_text,
+      executionText: actionText,
       message_api: this.messageApi,
       subscriptionObject: this.subscriptionObject
     }

@@ -8,6 +8,7 @@ export default class ClientInfo {
    * @constructor
    */
   constructor() {
+    // Browser array
     this.dataBrowser = [{
       string: navigator.userAgent,
       subString: "Chrome",
@@ -70,6 +71,7 @@ export default class ClientInfo {
       identity: "Netscape",
       versionSearch: "Mozilla"
     }];
+    // OS array
     this.dataOS = [{
       string: navigator.platform,
       subString: "Win",
@@ -93,24 +95,30 @@ export default class ClientInfo {
       identity: "Linux"
     }
 
-    ]
+    ];
   }
 
   /**
     * Get visitor information
     */
   getVistorInfo() {
+    // Stores visitor information
     var visitorInfo = {};
+    // Get browser
     visitorInfo.browser = this.searchString(this.dataBrowser)
       || "An unknown browser";
+    // Get browser version
     visitorInfo.version = this.searchVersion(navigator.userAgent)
       || this.searchVersion(navigator.appVersion)
       || this.searchMobileVersion(navigator.userAgent)
       || "An unknown version";
+    // Get browser metadata like nAgent, nVersion[Number],majorVersion[String]
     visitorInfo.nVersion = navigator.appVersion;
     visitorInfo.nAgent = navigator.userAgent;
     visitorInfo.majorVersion = visitorInfo.version;
+    // Get OS
     visitorInfo.OS = this.searchString(this.dataOS) || "An unknown OS";
+    // Get device type 
     visitorInfo.deviceType = this.getPlatformType();
     return visitorInfo
   }
@@ -161,6 +169,7 @@ export default class ClientInfo {
       if (match)
         return parseFloat(match[1]);
     } catch (e) {
+      console.log('Version Error', e);
     }
 
   }
@@ -169,6 +178,7 @@ export default class ClientInfo {
    * To get the user device type
    */
   getPlatformType() {
+    // Store device type
     let deviceType = '';
     if (navigator.userAgent.match(/mobile/i)) {
       return deviceType = 'Mobile';
@@ -188,11 +198,10 @@ export default class ClientInfo {
     if (!(window.location.protocol == 'https:')) {
       return failure();
     }
-    var url = (window.location.origin == 'https://pushly.500apps.com') ? window.location.origin + '/pushly/firebase-messaging-sw.js' : window.location.origin + '/firebase-messaging-sw.js'
-    var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");// code for IE6, IE5
+    var url = (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) ? window.location.origin + '/pushly/firebase-messaging-sw.js' : window.location.origin + '/firebase-messaging-sw.js'
+    var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");// Code for IE6, IE5
     request.open('GET', url, false);
-    request.send(); // there will be a 'pause' here until the response to come.
-    // the object request will be actually modified
+    request.send(); // There will be a 'pause' here until the response to come. The object request will be actually modified
 
     if (request.status === 200) {
       return success();

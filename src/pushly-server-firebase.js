@@ -24,26 +24,32 @@ export default class PushlyServerFirebase {
      * To show popup to get pushly side approval from the user when service worker file is not present in user domain
      */
     static getPushlySideApproval() {
-        var c = `<div style="background: #333; position: fixed;left:69px; width: 16%;"><div style="margin: 0 auto; width: 70%; color: #f0f0f0; padding: 15px;"><img src="https://pushly.s3.ap-south-1.amazonaws.com/pushly-logo+copy.png" style="width:62px;float:left;"><p style="font-size: small;">
-        Welcome to pushly
-       </p> <a id = "_push_banner_allow" style="background: #ccc; color: #333; text-decoration: none; padding: 0px 10px; border-radius: 3px; display: inline-block; border: 1px solid #aaa; border-bottom: 2px solid #aaa; cursor: pointer;">
-       Allow
-       </a> &nbsp; <a id = "_push_banner_deny" style="background: #ccc; color: #333; text-decoration: none; padding: 0px 10px; border-radius: 3px; display: inline-block; border: 1px solid #aaa; border-bottom: 2px solid #aaa; cursor: pointer;">
-       Decline</a><p style="font-size: small;">pushly wants to send notifications</p></div></div>`;
-
+        // Popup Html content
+        var c = `${window._pushGlobal.pushlyPopupHtml}`;
+        // Get all elements inside body tag
         var b = document.getElementsByTagName("BODY")[0];
+        // Create a div element inside body tag
         var a = document.createElement("div");
+        // Set id of div element added
         a.setAttribute("id", "myConsent");
+        // Add style to div element added
         a.setAttribute("style", "z-index: 10; overflow-x: overlay; overflow-y: overlay; top: 0; position: absolute; left: 0;");
+        // Add div element to body tag
         b.appendChild(a);
+        // Add popup Html to div elememt added
         document.getElementById("myConsent").innerHTML = c;
-        var instance = PushlyServerFirebase;
+        // Add event listener when allow button is clicked
         document.getElementById("_push_banner_allow").addEventListener("click", function () {
-            instance.isPushPermissionGranted(true);
+            // Send permission status
+            PushlyServerFirebase.isPushPermissionGranted(true);
+            // Hide popup
             document.getElementById("myConsent").style.display = "none";
         });
+        // Add event listener when decline button is clicked
         document.getElementById("_push_banner_deny").addEventListener("click", function () {
-            instance.isPushPermissionGranted(false);
+            // Send permission status
+            PushlyServerFirebase.isPushPermissionGranted(false);
+            // Hide popup
             document.getElementById("myConsent").style.display = "none";
         });
     }
@@ -71,8 +77,10 @@ export default class PushlyServerFirebase {
      * Open child window to include sw file
      */
     static openChildWindow() {
+        // Set localstorage for child window
         window.localStorage.setItem('_scb', 1);
-        window._pushchildWindow = window.open("https://pushly.500apps.com/pushly/sw/" + window._push.apiKey, "Ratting", "width=550,height=500,left=150,top=200,toolbar=0,status=0,")
+        // Open child window
+        window._pushchildWindow = window.open(`${window._pushGlobal.serverUrl}/sw/` + window._push.apiKey, "Ratting", "width=550,height=500,left=150,top=200,toolbar=0,status=0,")
     }
 
     /**
@@ -81,6 +89,7 @@ export default class PushlyServerFirebase {
      */
     static closeChildWindow(message) {
         if (message == 'close') {
+            // Close window
             window.close();
         }
     }
@@ -89,6 +98,7 @@ export default class PushlyServerFirebase {
      * To set session storage when user deny permission
      */
     static setDenySession() {
+        // Set session storage when user declines permission 
         window.sessionStorage.setItem('_scb', 1);
     }
 }

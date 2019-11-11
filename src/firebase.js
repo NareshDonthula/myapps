@@ -11,6 +11,7 @@ export default class PushlyFirebase {
      * @constructor
      */
     constructor() {
+        // Store firebase details 
         this.firebaseDetails = (window._pushfcm.apiKey == '' || window._pushfcm.authDomain == '' || window._pushfcm.databaseURL == '' || window._pushfcm.projectId == '' || window._pushfcm.messagingSenderId == '' || window._pushfcm.appId == '') ? {
             apiKey: "AIzaSyCHOfzwaG8QdWZQPbsD38gZQDbNmWyk3oA",
             authDomain: "apptitans.firebaseapp.com",
@@ -21,7 +22,7 @@ export default class PushlyFirebase {
             appId: "1:721913454836:web:68de7e40f92c5197"
         } : window._pushfcm;
 
-        //Initialize app in fcm
+        // Initialize app in fcm
         Firebase.initializeApp(this.firebaseDetails);
     }
 
@@ -29,10 +30,12 @@ export default class PushlyFirebase {
      * Initialization method
      */
     init() {
+        // Class instance to call static methods
         let scope = PushlyFirebase;
-        let serviceworkerRegistrationPath = (window.location.origin == 'https://pushly.500apps.com') ? '/pushly/firebase-messaging-sw.js' : '/firebase-messaging-sw.js';
+        // Path to register service worker
+        let serviceworkerRegistrationPath = (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) ? '/pushly/firebase-messaging-sw.js' : '/firebase-messaging-sw.js';
 
-        //Register service worker path in fcm
+        // Register service worker path in fcm
         navigator.serviceWorker.register(serviceworkerRegistrationPath)
             .then((registration) => {
                 Firebase.messaging().useServiceWorker(registration);
@@ -41,9 +44,9 @@ export default class PushlyFirebase {
         // Request permission to get token.....
         scope.getClientSideApproval();
 
-        //To get refresh token
+        // To get refresh token
         Firebase.messaging().onTokenRefresh(() => {
-            window._pushmessaging.getToken().then((refreshedToken) => {
+            Firebase.messaging().getToken().then((refreshedToken) => {
                 console.log('Token refreshed.');
 
                 // Indicate that the new Instance ID token has not yet been sent to the
@@ -62,9 +65,9 @@ export default class PushlyFirebase {
     }
 
     /**
-   * To get Instance ID token. Initially this makes a network call, once retrieved subsequent calls to getToken will return from cache.
-   * @param {Object} scope Current instance
-   */
+     * To get Instance ID token. Initially this makes a network call, once retrieved subsequent calls to getToken    will return from cache.
+     * @param {Object} scope Pushly instance
+     */
     static getFirebaseToken(scope = window._Pushly) {
         // [START get_token]
         Firebase.messaging().getToken().then((currentToken) => {
@@ -99,7 +102,8 @@ export default class PushlyFirebase {
                 console.log('error occured......', err);
 
                 //Close child window if open
-                if (window.location.origin == 'https://pushly.500apps.com') {
+                if (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) {
+                    // Call closeChildWindow method to close child window
                     PushlyServerFirebase.closeChildWindow("close");
                 }
             });

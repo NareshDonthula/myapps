@@ -1,3 +1,4 @@
+import GlobalConstants from './globals.js';
 import ClientInfo from './client.js';
 import PushlyFirebase from './firebase.js';
 import PushlyServerFirebase from './pushly-server-firebase.js';
@@ -11,9 +12,10 @@ class Pushly {
      * @constructor
      */
     constructor() {
+        // Store visitor information like OS, browser
         this.visitorInfo = {};
-        this.websiteDetails = {};
-        this.clientInfo = {};
+        // Store ClientInfo class instance
+        this.client = {};
     }
 
     /**
@@ -22,21 +24,23 @@ class Pushly {
     init() {
 
         // Get client info
-        this.clientInfo = new ClientInfo();
-        this.visitorInfo = this.clientInfo.getVistorInfo();
+        this.client = new ClientInfo();
+        this.visitorInfo = this.client.getVistorInfo();
 
-        //Initialize firebase
+        // Initialize firebase
         var pushlyFirebase = new PushlyFirebase();
         var pushlyServerFirebase = new PushlyServerFirebase();
-        this.clientInfo.detectFirebase(pushlyFirebase.init, pushlyServerFirebase.init)
+
+        // Call detectFirebase method to check whether service worker file is included or not
+        this.client.detectFirebase(pushlyFirebase.init, pushlyServerFirebase.init)
     }
 
 
     /**
-  * To set a flag in local storage when token is sent to server
-  * set 1 in localstorage when token send to server
-  * @param {Boolean} sent True or False
-  */
+     * To set a flag in local storage when token is sent to server
+     * set 1 in localstorage when token send to server
+     * @param {Boolean} sent True or False
+     */
     setTokenSentToServer(sent) {
         window.localStorage.setItem('sentToServer', sent ? '1' : '0');
     }
@@ -48,8 +52,9 @@ class Pushly {
     sendTokenToServer(currentToken) {
         if (!this.isTokenSentToServer()) {
             console.log('Sending token to server...');
-            // TODO(developer): Send the current token to your server.
+            // Set localstorage
             this.setTokenSentToServer(true);
+            // Send the current token to store in db .
             this.storeToken(currentToken);
         } else {
             console.log('Token already sent to server so won\'t send it again ' +
@@ -71,6 +76,7 @@ class Pushly {
      * @param {String} token Firebase token
      */
     storeToken(token) {
+        // Subscription token and visitor info 
         let details = {
             "api_key": window._push.apiKey,
             "nVersion": this.visitorInfo.nVersion,
@@ -82,7 +88,7 @@ class Pushly {
             "device_type": this.visitorInfo.deviceType,
             "subscription": token
         }
-        fetch('https://pushly.500apps.com/pushly/browser', {
+        fetch(`${window._pushGlobal.serverUrl}/browser`, {
             method: "post",
             headers: {
                 Accept: "application/json",
@@ -91,20 +97,23 @@ class Pushly {
         })
             .then((response) => {
                 // Close child window if open    
-                if (window.location.origin == 'https://pushly.500apps.com') {
+                if (window.location.origin == `${this.globalConstants.pushlyCloudUrl}`) {
+                    // Call closeChildWindow method to close child window
                     PushlyServerFirebase.closeChildWindow("close");
                 }
             })
             .catch(error => {
                 console.log('Error:', error);
                 // Close child window if open    
-                if (window.location.origin == 'https://pushly.500apps.com') {
+                if (window.location.origin == `${this.globalConstants.pushlyCloudUrl}`) {
+                    // Call closeChildWindow method to close child window
                     PushlyServerFirebase.closeChildWindow("close");
                 }
             });
     }
 }
-(() => { window._Pushly = new Pushly() 
-         window._Pushly.init();
+(() => {
+    window._Pushly = new Pushly()
+    window._Pushly.init();
 })();
 
