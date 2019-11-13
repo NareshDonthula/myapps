@@ -10,7 +10,7 @@ class PushlyFirebaseListener {
    * @constructor
    */
   constructor() {
-    // Store id of current executed message
+    // Store messageApi of current executed message when user clicks on the message
     this.exeMessageApi = '';
     // Store jwt token which has domainId, flowId, messageId 
     this.messageApi = '';
