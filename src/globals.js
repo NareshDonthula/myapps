@@ -9,8 +9,10 @@ export default class GlobalConstants {
     constructor() {
         // Pushly cloud url
         this.pushlyCloudUrl = 'https://pushly.500apps.com';
+        
         // Pushly server url
         this.serverUrl = this.pushlyCloudUrl + '/pushly';
+        
         // Pushly popup html
         this.pushlyPopupHtml = `<div style="background: #333; position: fixed;left:69px; width: 16%;"><div style="margin: 0 auto; width: 70%; color: #f0f0f0; padding: 15px;"><img src="https://pushly.s3.ap-south-1.amazonaws.com/pushly-logo+copy.png" style="width:62px;float:left;"><p style="font-size: small;">
         Welcome to pushly
