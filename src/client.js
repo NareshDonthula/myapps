@@ -104,20 +104,25 @@ export default class ClientInfo {
   getVistorInfo() {
     // Stores visitor information
     var visitorInfo = {};
+    
     // Get browser
     visitorInfo.browser = this.searchString(this.dataBrowser)
       || "An unknown browser";
+    
     // Get browser version
     visitorInfo.version = this.searchVersion(navigator.userAgent)
       || this.searchVersion(navigator.appVersion)
       || this.searchMobileVersion(navigator.userAgent)
       || "An unknown version";
+    
     // Get browser metadata like nAgent, nVersion[Number],majorVersion[String]
     visitorInfo.nVersion = navigator.appVersion;
     visitorInfo.nAgent = navigator.userAgent;
     visitorInfo.majorVersion = visitorInfo.version;
+    
     // Get OS
     visitorInfo.OS = this.searchString(this.dataOS) || "An unknown OS";
+    
     // Get device type 
     visitorInfo.deviceType = this.getPlatformType();
     return visitorInfo
