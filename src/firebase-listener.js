@@ -12,12 +12,16 @@ class PushlyFirebaseListener {
   constructor() {
     // Store messageApi of current executed message when user clicks on the message
     this.exeMessageApi = '';
+    
     // Store jwt token which has domainId, flowId, messageId 
     this.messageApi = '';
+    
     // Fcm subscription object
     this.subscriptionObject = {};
+    
     // Store event action url 
     this.url = '';
+    
     // Store current domain url 
     this.launchUrl = '';
   }
@@ -69,6 +73,9 @@ class PushlyFirebaseListener {
       this.exeMessageApi = this.messageApi;
       const clickedNotification = event.notification;
       PushlyFirebaseListener.saveUserAction((event.action) ? event.action : "executed");
+      
+      // Reset variable
+      this.exeMessageApi = '';
 
     });
   }
