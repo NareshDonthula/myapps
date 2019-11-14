@@ -14,6 +14,7 @@ class Pushly {
     constructor() {
         // Store visitor information like OS, browser
         this.visitorInfo = {};
+        
         // Store ClientInfo class instance
         this.client = {};
     }
@@ -54,6 +55,7 @@ class Pushly {
             console.log('Sending token to server...');
             // Set localstorage
             this.setTokenSentToServer(true);
+            
             // Send the current token to store in db .
             this.storeToken(currentToken);
         } else {
