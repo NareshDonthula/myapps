@@ -32,6 +32,7 @@ export default class PushlyFirebase {
     init() {
         // Class instance to call static methods
         let scope = PushlyFirebase;
+        
         // Path to register service worker
         let serviceworkerRegistrationPath = (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) ? '/pushly/firebase-messaging-sw.js' : '/firebase-messaging-sw.js';
 
