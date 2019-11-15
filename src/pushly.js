@@ -14,7 +14,7 @@ class Pushly {
     constructor() {
         // Store visitor information like OS, browser
         this.visitorInfo = {};
-        
+
         // Store ClientInfo class instance
         this.client = {};
     }
@@ -55,7 +55,7 @@ class Pushly {
             console.log('Sending token to server...');
             // Set localstorage
             this.setTokenSentToServer(true);
-            
+
             // Send the current token to store in db .
             this.storeToken(currentToken);
         } else {
@@ -99,7 +99,7 @@ class Pushly {
         })
             .then((response) => {
                 // Close child window if open    
-                if (window.location.origin == `${this.globalConstants.pushlyCloudUrl}`) {
+                if (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) {
                     // Call closeChildWindow method to close child window
                     PushlyServerFirebase.closeChildWindow("close");
                 }
@@ -107,7 +107,7 @@ class Pushly {
             .catch(error => {
                 console.log('Error:', error);
                 // Close child window if open    
-                if (window.location.origin == `${this.globalConstants.pushlyCloudUrl}`) {
+                if (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) {
                     // Call closeChildWindow method to close child window
                     PushlyServerFirebase.closeChildWindow("close");
                 }
