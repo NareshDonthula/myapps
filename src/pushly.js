@@ -2,6 +2,7 @@ import GlobalConstants from './globals.js';
 import ClientInfo from './client.js';
 import PushlyFirebase from './firebase.js';
 import PushlyServerFirebase from './pushly-server-firebase.js';
+const _500client = require('@500apps/500apps-web');
 
 /**
  * @class Pushly
@@ -65,8 +66,7 @@ class Pushly {
     }
 
     /**
-    * To check whether the token is sent to server or not
-    * If sent, get flag from localstorage
+    * To check whether the token is seconst _500client = require('@500apps/500apps-web');age
     */
     isTokenSentToServer() {
         return window.localStorage.getItem('sentToServer') === '1';
@@ -90,28 +90,25 @@ class Pushly {
             "device_type": this.visitorInfo.deviceType,
             "subscription": token
         }
-        fetch(`${window._pushGlobal.serverUrl}/browser`, {
+        _500client.rest.data(`${window._pushGlobal.serverUrl}/browser`, {
             method: "post",
             headers: {
                 Accept: "application/json",
             },
             body: JSON.stringify(details)
-        })
-            .then((response) => {
-                // Close child window if open    
-                if (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) {
-                    // Call closeChildWindow method to close child window
-                    PushlyServerFirebase.closeChildWindow("close");
-                }
-            })
-            .catch(error => {
-                console.log('Error:', error);
-                // Close child window if open    
-                if (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) {
-                    // Call closeChildWindow method to close child window
-                    PushlyServerFirebase.closeChildWindow("close");
-                }
-            });
+        }, () => {
+            // Close child window if open
+            if (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) {
+                // Call closeChildWindow method to close child window
+                PushlyServerFirebase.closeChildWindow("close");
+            }
+        }, () => {
+            // Close child window if open    
+            if (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) {
+                // Call closeChildWindow method to close child window
+                PushlyServerFirebase.closeChildWindow("close");
+            }
+        });
     }
 }
 (() => {
