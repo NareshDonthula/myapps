@@ -1,0 +1,60 @@
+@startuml Pushly
+class Pushly {
+    +visitorInfo: Object
+    -init()
+    -setTokenSentToServer()
+    -sendTokenToServer()
+    -isTokenSentToServer()
+    -storeToken()
+    
+}
+ 
+class ClientInfo {
+     -detectFirebase()
+}
+
+class PushlyServerFirebase {
+      -init()
+      -getPushlySideApproval()
+      -isPushPermissionGranted()
+      -checkPermissionStatus()
+      -openChildWindow()
+      -closeChildWindow()
+      -setDenySession()
+}
+
+class PushlyFirebase {
+      +firebaseDetails: Object
+      -init()
+      -getClientSideApproval()
+      -getFirebaseToken()
+      
+}
+ 
+class PushlyFirebaseListener {
+      +executionMessageApi: String
+      +messageApi: String
+      +subscriptionObject: Object
+      +url: String
+      +launchUrl: String
+      -init()
+      -saveUserAction()
+}
+
+class GlobalConstants {
+      +pushlyCloudUrl: String
+      +serverUrl: String
+      +pushlyPopupHtml: String
+}
+
+
+Pushly -down-> Node.500appsweb
+Pushly -down-> ClientInfo
+Pushly -down-> GlobalConstants
+
+ClientInfo -down-> PushlyFirebase
+ClientInfo -down-> PushlyServerFirebase
+
+PushlyFirebase -up-> Pushly
+
+@enduml
