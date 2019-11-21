@@ -25,7 +25,7 @@
     "webpack-cli": "^3.3.9"
   },
   "dependencies": {
-    "@500apps/500apps-web": "^1.0.2",
+    "@500apps/500apps-web": "^1.0.3",
     "firebase": "^6.6.2"
   }
 }

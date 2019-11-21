@@ -27,7 +27,7 @@ class Pushly {
 
         // Get client info
         this.client = new ClientInfo();
-        this.visitorInfo = this.client.getVistorInfo();
+        this.visitorInfo = _500client.client.getVistorInfo();
 
         // Initialize firebase
         var pushlyFirebase = new PushlyFirebase();
