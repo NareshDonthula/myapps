@@ -16,9 +16,9 @@ export default class ClientInfo {
    * @param {callback} failure 
    */
   detectFirebase(success, failure) {
-    // if (!(window.location.protocol == 'https:')) {
-    //   return failure();
-    // }
+     if (!(window.location.protocol == 'https:')) {
+       return failure();
+     }
     var url = (window.location.origin == `${window._pushGlobal.pushlyCloudUrl}`) ? window.location.origin + '/pushly/firebase-messaging-sw.js' : window.location.origin + '/firebase-messaging-sw.js'
     var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");// Code for IE6, IE5
     request.open('GET', url, false);
